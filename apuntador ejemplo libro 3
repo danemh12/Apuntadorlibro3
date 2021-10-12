@@ -1,38 +1,61 @@
-#include<stdio.h>
+#include <stdio.h>
 #include<string.h>
-#include<ctype.h>
-#define MAXTOKEN 1OO
 
-enum{NAME, PARENS, BRACKETS};
-void dcl(void);
-void dirdal(void);
- int gettoken(void);
- int tokentype;
- char token[MAXTOKEN];
- char name[MAXTOKEN];
- char datatype[MAXTOKEN];
- char out[1000];
- 
- main()
- {
- 	int type;
- 	char temp[MAXTOKEN];
- 	while(gettoken()!=EOF){
- 		strcpy(out, token);
- 		while((type=gettoken())!='\n')
- 		if(type==PARENS||type==BRACKETS)
- 		strcat(out, token);
- 		else if(type=='*'){
- 			sprinf(temp, "(*%s)", out);
- 			strcpy(out, temp);
-		 } else if(type==NAME){
-		 	sprintf(temp, "%s%s", token, out);
-		 	strcpy(out, temp);
-		 } else 
-		 printf("entrada invalida en %s\n", token);
-		 printf("%s\n", out);
-		 
- 		
-	 }
-	 return 0;
- }
+#define MAXLINES 5000
+
+
+char *lineptr[MAXLINES];
+int readlines(char *lineptr[], int nlines);
+void writelines(char *lineptr[], int nlines);
+
+void qsort(char *v[], int left, int rigth)
+{
+int i, j,last;
+void swap(char *v[], int i, int j);
+{
+	char *temp;
+	temp=v[i];
+	v[i]=v[j];
+	v[j]=temp;
+}
+
+if(left>=rigth)
+return;
+swap(v, left, (left+rigth)/2);
+last=left;
+for(i=left+1; i<=rigth;i++)
+if(strcmp(v[i],v[left])<0)
+swap(v,++last,i);
+swap(v, left, last);
+qsort(v,left,last-1);
+qsort(v,last+1,rigth);
+}
+
+
+#define MAXLEN 1000
+int i;
+int getline(char*, int);
+char *alloc(int);
+
+int readlines(char *lineptr[], int maxlines)
+{
+	int len, nlines;
+	char *p, line[MAXLEN];
+	
+	nlines=0;
+	while((len=getline(line, MAXLEN))>0)
+	if(nlines>=maxlines||(p=alloc(len))==NULL)
+	return -1;
+	else{
+		line[len-1]='\0';
+		strcpy(p, line);
+		lineptr[nlines++]=p;
+	}
+	return nlines;
+}
+
+void writelines(char *lineptr[], int nlines)
+{
+while(nlines-->0)
+printf("%s\n",*lineptr++);
+}
